@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <Button
+        android:id="@+id/btnHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="历史记录" />
+
+
+    <Button
+        android:id="@+id/btnFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnHistory"
+        android:text="收藏设备列表" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="你的手机名字" />
+
+    <TextView
+        android:id="@+id/tvAutoSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnHistory"
+        android:text="  自动保存:" />
+
+    <CheckBox
+        android:id="@+id/cbAutoSaveNone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnHistory"
+        android:layout_toEndOf="@id/tvAutoSave"
+        android:text="无" />
+
+    <CheckBox
+        android:id="@+id/cbAutoSaveFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnHistory"
+        android:layout_toEndOf="@id/cbAutoSaveNone"
+        android:text="仅收藏夹" />
+
+    <CheckBox
+        android:id="@+id/cbAutoSaveAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnHistory"
+        android:layout_toEndOf="@id/cbAutoSaveFavorite"
+        android:text="任何人" />
+</RelativeLayout>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:id="@+id/llSend"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSelectImage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="发送图片"
+            tools:enabled="true"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btnSelectFile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="发送文件"
+            tools:enabled="true"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btnSendMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="发送信息"
+            tools:enabled="true"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnScanner"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llSend"
+        android:layout_alignParentStart="true"
+        android:layout_margin="5dp"
+        android:text="扫描设备" />
+
+    <Button
+        android:id="@+id/btnDisconnect"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llSend"
+        android:layout_alignEnd="@id/btnScanner"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp"
+        android:text="断开连接" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/horizontalListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnScanner"
+        android:padding="8dp"
+        android:scrollbars="horizontal" />
+
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tvFileList"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@id/btnScanner"-->
+    <!--        android:text="当前待发送文件个数:     " />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tvFilenum"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@id/btnScanner"-->
+    <!--        android:layout_alignEnd="@id/tvFileList"-->
+    <!--        android:text="0" />-->
+
+    <TextView
+        android:id="@+id/tvDeviceList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/horizontalListView"
+        android:text="当前设备列表:"
+
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDeviceList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvDeviceList" />
+
+
+</RelativeLayout>

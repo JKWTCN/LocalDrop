@@ -55,7 +55,6 @@ class FileReceiver(private val port: Int, private val saveDir: File) {
                         info = FileTransfer.info,
                         raw = FileTransfer.raw.toByteArray()
                     )
-                    //     todo 存储FileInfo对象
                     // 异步处理文件存储
                     CoroutineScope(Dispatchers.IO).launch {
                         val savedFile = saveFileWithRetry(fileInfo)
@@ -83,11 +82,19 @@ class FileReceiver(private val port: Int, private val saveDir: File) {
     private fun saveFileWithRetry(fileInfo: FileInfo): File? {
         return try {
             // 获取存储目录
-            val storageDir = File(
+            var storageDir = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
                 "LocalDrop"
             ).apply {
                 if (!exists()) mkdirs()
+            }
+            if (fileInfo.fileType == FileType.IMG) {
+                storageDir = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                    "LocalDrop"
+                ).apply {
+                    if (!exists()) mkdirs()
+                }
             }
 
             // 处理文件名

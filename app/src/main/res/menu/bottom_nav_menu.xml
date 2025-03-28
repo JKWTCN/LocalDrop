@@ -1,0 +1,17 @@
+<!-- res/menu/bottom_nav_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/receiverFragment"
+        android:icon="@drawable/ic_receiver"
+        android:title="接收" />
+
+    <item
+        android:id="@id/sendFragment"
+        android:icon="@drawable/ic_send"
+        android:title="发送" />
+
+    <item
+        android:id="@id/settingFragment"
+        android:icon="@drawable/ic_settings"
+        android:title="设置" />
+</menu>

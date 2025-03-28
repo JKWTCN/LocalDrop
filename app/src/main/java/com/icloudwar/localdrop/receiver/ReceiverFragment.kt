@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatActivity.WIFI_P2P_SERVICE
@@ -181,14 +182,21 @@ class ReceiverFragment : Fragment() {
 
     // 生命周期相关
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    public fun SwitchIn() {
-        show_log("SwitchIn")
-        initView()
-        initDevice()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.enableEdgeToEdge()
     }
 
-    public fun SwitchOut() {
-        show_log("SwitchOut")
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onStart() {
+        super.onStart()
+        initView()
+        initDevice()
+        // show_log("onStart")
+    }
+
+    override fun onStop() {
+        super.onStop()
         receiver.stop()
         // receiverThread.interrupt()
         lifecycleScope.launch {
@@ -197,20 +205,7 @@ class ReceiverFragment : Fragment() {
             }
             removeGroupIfNeed();
         }
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onResume() {
-        super.onResume()
-        SwitchIn()
-        // show_log("onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        SwitchOut()
-        // show_log("onPause")
+        // show_log("onStop")
     }
 
     override fun onCreateView(

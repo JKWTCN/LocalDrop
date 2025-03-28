@@ -1,0 +1,21 @@
+<!-- nav_graph.xml -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/receiverFragment">
+
+    <fragment
+        android:id="@+id/receiverFragment"
+        android:name="com.icloudwar.localdrop.receiver.ReceiverFragment"
+        android:label="接收" />
+
+    <fragment
+        android:id="@+id/sendFragment"
+        android:name="com.icloudwar.localdrop.sender.SendFragment"
+        android:label="发送" />
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.icloudwar.localdrop.setting.SettingFragment"
+        android:label="设置" />
+</navigation>

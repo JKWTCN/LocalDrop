@@ -27,7 +27,6 @@ class FileSender(private val host: String, private val port: Int) {
         Socket(host, port).use { socket ->
             val output = socket.getOutputStream()
             val input = socket.getInputStream()
-
             for (i in waitSendFiles) {
                 show_log("send ${i.fileName},size:${i.fileSize} info ${i.info}")
                 val send_bytes = FileTransferOuterClass.FileTransfer.newBuilder().apply {
@@ -35,7 +34,7 @@ class FileSender(private val host: String, private val port: Int) {
                     fileSize = i.fileSize
                     info = i.info
                     raw = ByteString.copyFrom(i.raw)
-                    fileType = FileType.TEXT.ordinal
+                    fileType = FileType.entries.indexOf(i.fileType)
                 }.build().toByteArray()
                 output.write(send_bytes)
                 show_log("发送${i.fileName}")

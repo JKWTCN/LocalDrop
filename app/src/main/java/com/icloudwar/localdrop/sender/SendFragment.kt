@@ -26,6 +26,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -109,7 +110,7 @@ class SendFragment : Fragment() {
                 mimeType == "application/octet-stream" -> FileType.FILE
                 else -> FileType.FILE
             }
-            val rawBytes = if (fileSize < 10 * 1024 * 1024) { // 限制10MB以下文件
+            val rawBytes = if (fileSize < 100 * 1024 * 1024) { // 限制100MB以下文件
                 contentResolver.openInputStream(this)?.use { it.readBytes() }
             } else {
                 null
@@ -182,7 +183,6 @@ class SendFragment : Fragment() {
                 object : WifiP2pManager.ActionListener {
                     override fun onSuccess() {
                         show_log("connect onSuccess")
-
                     }
 
                     override fun onFailure(reason: Int) {
@@ -195,10 +195,13 @@ class SendFragment : Fragment() {
             // 客户端发送文件
             val sender = ipAddress?.let { FileSender(it, 27431) }
             if (sender != null) {
-                Thread {
+                val t = Thread {
                     sender.sendFiles(waitSendFiles)
-                }.start()
+                }
+                t.start()
+                t.join()
                 waitSendFiles.clear()
+                filesAdapter?.notifyDataSetChanged()
                 // println("All files sent successfully!")
             }
 
@@ -405,48 +408,28 @@ class SendFragment : Fragment() {
     }
 
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (hidden) {
-            // 隐藏时所作的事情
-            show_log("onHiddenChanged: 隐藏");
-        } else {
-            // 显示时所作的事情
-            show_log("onHiddenChanged: 显示");
-        }
-
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.enableEdgeToEdge()
+        // show_log("onCreate")
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onResume() {
-        super.onResume()
-        show_log("onResume")
+    override fun onStart() {
+        super.onStart()
         initView()
         initDevice()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        show_log("onPause")
-        discoverThread.interrupt()
-        if (broadcastReceiver != null) {
-            activity?.unregisterReceiver(broadcastReceiver)
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        show_log("onDetach")
+        // show_log("onStart")
     }
 
     override fun onStop() {
         super.onStop()
+        discoverThread.interrupt()
+        if (broadcastReceiver != null) {
+            activity?.unregisterReceiver(broadcastReceiver)
+        }
         show_log("onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        show_log("onDestroy")
     }
 
 
@@ -468,10 +451,13 @@ class SendFragment : Fragment() {
                 // 客户端发送文件
                 val sender = ipAddress?.let { FileSender(it, 27431) }
                 if (sender != null) {
-                    Thread {
+                    val t = Thread {
                         sender.sendFiles(waitSendFiles)
-                    }.start()
+                    }
+                    t.start()
+                    t.join()
                     waitSendFiles.clear()
+                    filesAdapter?.notifyDataSetChanged()
                 }
             }
         }

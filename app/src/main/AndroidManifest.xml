@@ -39,7 +39,7 @@
             android:exported="false"
             android:label="@string/title_activity_hello" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".setting.SettingFragment"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

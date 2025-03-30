@@ -29,20 +29,44 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_local_drop"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_local_drop"
         android:supportsRtl="true"
         android:theme="@style/Theme.LocalDrop"
         tools:targetApi="31">
+        <activity
+            android:name=".fileHistory.FileHistoryActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- 支持所有文件类型（通用匹配） -->
+                <data android:mimeType="*/*" />
+                <!-- 可选：具体类型增强匹配优先级 -->
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- 支持所有文件类型（通用匹配） -->
+                <data android:mimeType="*/*" />
+                <!-- 可选：具体类型增强匹配优先级 -->
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
     </application>

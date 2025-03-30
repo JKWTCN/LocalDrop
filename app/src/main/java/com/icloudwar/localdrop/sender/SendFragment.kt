@@ -413,9 +413,18 @@ class SendFragment : Fragment() {
 
 
     // 生命周期相关
+    @SuppressLint("NewApi")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+        val receivedUris = arguments?.getParcelableArrayList<Uri>("shared_uris")
+        receivedUris?.forEach { uri ->
+            activity?.applicationContext?.let { it ->
+                uri.toFileInfo(
+                    context = it
+                )?.let { waitSendFiles.add(it) }
+            }
+        }
         return inflater.inflate(R.layout.activity_send, container, false)
     }
 

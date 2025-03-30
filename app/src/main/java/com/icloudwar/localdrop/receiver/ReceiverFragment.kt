@@ -2,6 +2,7 @@ package com.icloudwar.localdrop.receiver
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
+import android.content.Intent
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
@@ -12,8 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -24,6 +23,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.icloudwar.localdrop.R
+import com.icloudwar.localdrop.fileHistory.FileHistoryActivity
+import com.icloudwar.localdrop.fileHistory.FileHistoryManager
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -60,6 +61,8 @@ class ReceiverFragment : Fragment() {
         mActivity.supportActionBar?.title = "LocalDrop (接收模式)"
         btnHistory?.setOnClickListener {
             // todo 历史
+            val intent = Intent(activity, FileHistoryActivity::class.java)
+            startActivity(intent)
         }
         btnClearText?.setOnClickListener {
             textRev?.text = ""
@@ -75,6 +78,7 @@ class ReceiverFragment : Fragment() {
     private val receiver = FileReceiver(
         port = 27431
     )
+    private val historyManager by lazy { activity?.let { FileHistoryManager(it) } }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun initDevice() {
@@ -97,7 +101,8 @@ class ReceiverFragment : Fragment() {
             )
         }
         createGroup()
-        receiver.start()
+
+        historyManager?.let { receiver.start(it) }
     }
 
 
@@ -109,13 +114,13 @@ class ReceiverFragment : Fragment() {
             wifiP2pManager.createGroup(wifiP2pChannel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     show_log("createGroup onSuccess")
-                    showToast("创建群组成功")
+                    // showToast("创建群组成功")
                 }
 
                 override fun onFailure(reason: Int) {
                     val log = "createGroup onFailure: $reason"
                     show_log(log)
-                    showToast(message = log)
+                    showToast("创建群组失败，请尝试重启WiFi并关闭移动热点功能")
                 }
             })
         }
@@ -133,14 +138,14 @@ class ReceiverFragment : Fragment() {
                             override fun onSuccess() {
                                 val log = "removeGroup onSuccess"
                                 show_log(log)
-                                showToast(message = log)
+                                // showToast(message = log)
                                 continuation.resume(value = Unit)
                             }
 
                             override fun onFailure(reason: Int) {
                                 val log = "removeGroup onFailure: $reason"
                                 show_log(log)
-                                showToast(message = log)
+                                showToast("移除群组失败，请尝试重启应用")
                                 continuation.resume(value = Unit)
                             }
                         })

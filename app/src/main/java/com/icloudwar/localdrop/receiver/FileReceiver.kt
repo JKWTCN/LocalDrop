@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.icloudwar.localdrop.FileInfo
 import com.icloudwar.localdrop.FileType
+import com.icloudwar.localdrop.fileHistory.FileHistoryManager
 import org.json.JSONObject
 import java.io.*
 import java.lang.ref.WeakReference
@@ -24,7 +25,7 @@ import kotlin.math.min
 class FileReceiver(private val port: Int) {
     private var bigStartT = Thread()
     private var bigSocket = ServerSocket()
-
+    private var historyManager: FileHistoryManager? = null
 
 
     private fun showLog(msg: String) {
@@ -44,7 +45,8 @@ class FileReceiver(private val port: Int) {
 
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun start() {
+    fun start(historyManager: FileHistoryManager) {
+        this.historyManager = historyManager
         bigStartT = Thread { fileHandleClient() }
         bigStartT.start()
     }
@@ -116,6 +118,8 @@ class FileReceiver(private val port: Int) {
                                     remaining -= bytesRead
                                 }
                                 fos.flush()
+                                // 添加历史记录
+                                historyManager?.addHistory(fileInfo, targetFile.absolutePath)
                                 showLog("${fileInfo.fileName} saved")
                             }
                         } else {

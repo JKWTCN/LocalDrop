@@ -53,7 +53,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-
+    implementation ("androidx.sqlite:sqlite:2.2.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

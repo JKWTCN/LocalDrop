@@ -10,5 +10,5 @@ data class FileInfo(
 ) : Serializable
 
 enum class FileType {
-    TEXT, IMG, FILE, AUDIO, VIDEO, DIR
+    TEXT, IMG, FILE, AUDIO, VIDEO, DIR, BIG_FILE
 }

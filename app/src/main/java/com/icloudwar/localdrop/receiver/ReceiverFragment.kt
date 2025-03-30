@@ -101,7 +101,7 @@ class ReceiverFragment : Fragment() {
     }
     private var broadcastReceiver: BroadcastReceiver? = null
     val receiver = FileReceiver(
-        port = 27431, saveDir = File("/download")
+        port = 27431, port2 = 27432
     )
     var receiverThread = Thread()
 

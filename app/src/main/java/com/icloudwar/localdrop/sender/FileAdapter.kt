@@ -33,6 +33,7 @@ class FileAdapter(
                     FileType.AUDIO -> R.drawable.file
                     FileType.VIDEO -> R.drawable.file
                     FileType.DIR -> R.drawable.file
+                    FileType.BIG_FILE -> R.drawable.file
                 }
             )
 

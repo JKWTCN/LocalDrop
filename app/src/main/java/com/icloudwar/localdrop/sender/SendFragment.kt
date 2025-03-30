@@ -115,14 +115,25 @@ class SendFragment : Fragment() {
             } else {
                 null
             }
-            // val rawBytes = contentResolver.openInputStream(this)?.use { it.readBytes() }
-            FileInfo(
-                fileName = fileName,
-                fileSize = fileSize,
-                fileType = fileType,
-                info = "$this",
-                raw = rawBytes
-            )
+            // val rawBy
+            // tes = contentResolver.openInputStream(this)?.use { it.readBytes() }
+            if (rawBytes != null)
+                FileInfo(
+                    fileName = fileName,
+                    fileSize = fileSize,
+                    fileType = fileType,
+                    info = "$this",
+                    raw = rawBytes
+                )
+            else {
+                FileInfo(
+                    fileName = fileName,
+                    fileSize = fileSize,
+                    fileType = FileType.BIG_FILE,
+                    info = "$this",
+                    raw = null
+                )
+            }
         } catch (e: Exception) {
             show_log("Failed to read file: ${e.message}")
             null
@@ -193,17 +204,25 @@ class SendFragment : Fragment() {
             val ipAddress = wifiP2pInfo?.groupOwnerAddress?.hostAddress
             show_log("获取到根地址,开始发送 $ipAddress")
             // 客户端发送文件
-            val sender = ipAddress?.let { FileSender(it, 27431) }
-            if (sender != null) {
-                val t = Thread {
-                    sender.sendFiles(waitSendFiles)
+            // val sender = ipAddress?.let { FileSender(it, 27431) }
+            for (waitSendFile in waitSendFiles) {
+                val sender = ipAddress?.let { FileSender(it, 27431, 27432) }
+                if (sender != null && waitSendFile.fileType != FileType.BIG_FILE) {
+                    val t = Thread {
+                        sender.sendFile(waitSendFile)
+                    }
+                    t.start()
+                    t.join()
+                } else if (sender != null) {
+                    val t = Thread {
+                        activity?.applicationContext?.let { sender.sendBigFile(waitSendFile, it) }
+                    }
+                    t.start()
+                    t.join()
                 }
-                t.start()
-                t.join()
-                waitSendFiles.clear()
-                filesAdapter?.notifyDataSetChanged()
-                // println("All files sent successfully!")
             }
+            waitSendFiles.clear()
+            filesAdapter?.notifyDataSetChanged()
 
         }
     }
@@ -449,16 +468,29 @@ class SendFragment : Fragment() {
                 val ipAddress = wifiP2pInfo.groupOwnerAddress?.hostAddress
                 show_log("获取到根地址,开始发送 $ipAddress")
                 // 客户端发送文件
-                val sender = ipAddress?.let { FileSender(it, 27431) }
-                if (sender != null) {
-                    val t = Thread {
-                        sender.sendFiles(waitSendFiles)
+                for (waitSendFile in waitSendFiles) {
+                    val sender = ipAddress?.let { FileSender(it, 27431, 27432) }
+                    if (sender != null && waitSendFile.fileType != FileType.BIG_FILE) {
+                        val t = Thread {
+                            sender.sendFile(waitSendFile)
+                        }
+                        t.start()
+                        t.join()
+                    } else if (sender != null) {
+                        val t = Thread {
+                            activity?.applicationContext?.let {
+                                sender.sendBigFile(
+                                    waitSendFile,
+                                    it
+                                )
+                            }
+                        }
+                        t.start()
+                        t.join()
                     }
-                    t.start()
-                    t.join()
-                    waitSendFiles.clear()
-                    filesAdapter?.notifyDataSetChanged()
                 }
+                waitSendFiles.clear()
+                filesAdapter?.notifyDataSetChanged()
             }
         }
 

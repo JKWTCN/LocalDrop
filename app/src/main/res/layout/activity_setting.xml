@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".setting.SettingFragment">
+    android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:text="hello" />
+        android:layout_centerHorizontal="true"
+        android:text="本页还在施工中,先看其他东西吧qwq" />
+
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:contentDescription="头像"
+        android:src="@drawable/avatar" />
+
+    <TextView
+        android:id="@+id/btn_github"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_avatar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="GitHub:\nhttps://github.com/JKWTCN/LocalDrop" />
+
+    <TextView
+        android:id="@+id/btn_bilibili"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_github"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Bilibili:\nhttps://space.bilibili.com/283390377" />
 
 </RelativeLayout>

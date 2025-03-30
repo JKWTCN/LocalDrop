@@ -1,6 +1,5 @@
 package com.icloudwar.localdrop.sender
 
-import FileSender
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.BroadcastReceiver
@@ -40,7 +39,6 @@ import com.icloudwar.localdrop.FileInfo
 import com.icloudwar.localdrop.FileType
 import com.icloudwar.localdrop.R
 import com.icloudwar.localdrop.receiver.DirectActionListener
-import kotlin.math.log
 
 
 class SendFragment : Fragment() {
@@ -104,9 +102,9 @@ class SendFragment : Fragment() {
             // 判断文件类型
             val fileType = when {
                 mimeType.startsWith("image/") -> FileType.IMG
-                mimeType.startsWith("text/") -> FileType.FILE
-                mimeType.startsWith("audio/") -> FileType.FILE
-                mimeType.startsWith("video/") -> FileType.FILE
+                mimeType.startsWith("text/") -> FileType.TEXT
+                mimeType.startsWith("audio/") -> FileType.AUDIO
+                mimeType.startsWith("video/") -> FileType.VIDEO
                 mimeType == "application/octet-stream" -> FileType.FILE
                 else -> FileType.FILE
             }
@@ -117,23 +115,13 @@ class SendFragment : Fragment() {
             }
             // val rawBy
             // tes = contentResolver.openInputStream(this)?.use { it.readBytes() }
-            if (rawBytes != null)
-                FileInfo(
-                    fileName = fileName,
-                    fileSize = fileSize,
-                    fileType = fileType,
-                    info = "$this",
-                    raw = rawBytes
-                )
-            else {
-                FileInfo(
-                    fileName = fileName,
-                    fileSize = fileSize,
-                    fileType = FileType.BIG_FILE,
-                    info = "$this",
-                    raw = null
-                )
-            }
+            FileInfo(
+                fileName = fileName,
+                fileSize = fileSize,
+                fileType = fileType,
+                info = "$this",
+                raw = null
+            )
         } catch (e: Exception) {
             show_log("Failed to read file: ${e.message}")
             null
@@ -204,18 +192,12 @@ class SendFragment : Fragment() {
             val ipAddress = wifiP2pInfo?.groupOwnerAddress?.hostAddress
             show_log("获取到根地址,开始发送 $ipAddress")
             // 客户端发送文件
-            // val sender = ipAddress?.let { FileSender(it, 27431) }
+            // val sender = ipAddress?.let { com.icloudwar.localdrop.sender.FileSender(it, 27431) }
             for (waitSendFile in waitSendFiles) {
-                val sender = ipAddress?.let { FileSender(it, 27431, 27432) }
-                if (sender != null && waitSendFile.fileType != FileType.BIG_FILE) {
+                val sender = ipAddress?.let { FileSender(it, 27431) }
+                if (sender != null) {
                     val t = Thread {
-                        sender.sendFile(waitSendFile)
-                    }
-                    t.start()
-                    t.join()
-                } else if (sender != null) {
-                    val t = Thread {
-                        activity?.applicationContext?.let { sender.sendBigFile(waitSendFile, it) }
+                        activity?.applicationContext?.let { sender.sendFile(waitSendFile, it) }
                     }
                     t.start()
                     t.join()
@@ -270,7 +252,7 @@ class SendFragment : Fragment() {
                     val textTransfer = FileInfo(
                         fileName = "text",
                         fileSize = text.length.toLong(),
-                        fileType = FileType.TEXT,
+                        fileType = FileType.QUICK_MESSAGE,
                         info = text,
                         raw = text.toByteArray(),
                     )
@@ -312,7 +294,7 @@ class SendFragment : Fragment() {
 
 
         filesAdapter = FileAdapter(waitSendFiles) { file ->
-            Toast.makeText(activity, "Clicked: ${file.fileName}", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(activity, "Clicked: ${file.fileName}", Toast.LENGTH_SHORT).show()
             // 创建对话框
             val alertDialog = AlertDialog.Builder(requireContext()).apply {
                 setTitle("是否移除该文件？")
@@ -326,16 +308,15 @@ class SendFragment : Fragment() {
                         scaleType = ImageView.ScaleType.CENTER_CROP
                     }
                     try {
-                        file.raw?.let {
-                            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-                            imageView.setImageBitmap(bitmap)
-                        }
+                        val bitmap = BitmapFactory.decodeStream(
+                            context.contentResolver.openInputStream(Uri.parse(file.info))
+                        );
+                        imageView.setImageBitmap(bitmap)
                     } catch (e: Exception) {
                         show_log("图片加载失败: ${e.message}")
                     }
                     setView(imageView)
-                }
-                if (file.fileType == FileType.TEXT) {
+                } else {
                     val textView = TextView(context).apply {
                         layoutParams = LinearLayout.LayoutParams(
                             resources.getDimensionPixelSize(R.dimen.thumbnail_size),
@@ -469,17 +450,11 @@ class SendFragment : Fragment() {
                 show_log("获取到根地址,开始发送 $ipAddress")
                 // 客户端发送文件
                 for (waitSendFile in waitSendFiles) {
-                    val sender = ipAddress?.let { FileSender(it, 27431, 27432) }
-                    if (sender != null && waitSendFile.fileType != FileType.BIG_FILE) {
-                        val t = Thread {
-                            sender.sendFile(waitSendFile)
-                        }
-                        t.start()
-                        t.join()
-                    } else if (sender != null) {
+                    val sender = ipAddress?.let { FileSender(it, 27431) }
+                    if (sender != null) {
                         val t = Thread {
                             activity?.applicationContext?.let {
-                                sender.sendBigFile(
+                                sender.sendFile(
                                     waitSendFile,
                                     it
                                 )

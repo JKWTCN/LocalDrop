@@ -25,7 +25,6 @@ import androidx.lifecycle.lifecycleScope
 import com.icloudwar.localdrop.R
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.io.File
 import kotlin.coroutines.resume
 
 
@@ -42,18 +41,7 @@ class ReceiverFragment : Fragment() {
     }
 
     // view相关
-    private val cbAutoSaveAll by lazy {
-        activity?.findViewById<CheckBox>(R.id.cbAutoSaveAll)
-    }
-    private val cbAutoSaveNone by lazy {
-        activity?.findViewById<CheckBox>(R.id.cbAutoSaveNone)
-    }
-    private val cbAutoSaveFavorite by lazy {
-        activity?.findViewById<CheckBox>(R.id.cbAutoSaveFavorite)
-    }
-    private val btnFavorite by lazy {
-        activity?.findViewById<Button>(R.id.btnFavorite)
-    }
+
     private val btnHistory by lazy {
         activity?.findViewById<Button>(R.id.btnHistory)
     }
@@ -63,32 +51,6 @@ class ReceiverFragment : Fragment() {
     private fun initView() {
         val mActivity = activity as AppCompatActivity
         mActivity.supportActionBar?.title = "LocalDrop (接收模式)"
-        cbAutoSaveAll?.setChecked(true)
-        cbAutoSaveNone?.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                rev_mode = 2
-                cbAutoSaveAll?.setChecked(false)
-                cbAutoSaveFavorite?.setChecked(false)
-            }
-        })
-        cbAutoSaveFavorite?.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                rev_mode = 1
-                cbAutoSaveAll?.setChecked(false)
-                cbAutoSaveNone?.setChecked(false)
-            }
-        })
-        cbAutoSaveAll?.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                rev_mode = 0
-                cbAutoSaveNone?.setChecked(false)
-                cbAutoSaveFavorite?.setChecked(false)
-            }
-        })
-
-        btnFavorite?.setOnClickListener {
-            // todo 收藏
-        }
         btnHistory?.setOnClickListener {
             // todo 历史
         }
@@ -100,10 +62,9 @@ class ReceiverFragment : Fragment() {
         activity?.getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
     }
     private var broadcastReceiver: BroadcastReceiver? = null
-    val receiver = FileReceiver(
-        port = 27431, port2 = 27432
+    private val receiver = FileReceiver(
+        port = 27431
     )
-    var receiverThread = Thread()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun initDevice() {
@@ -127,9 +88,6 @@ class ReceiverFragment : Fragment() {
         }
         createGroup()
         receiver.start()
-        // receiverThread = Thread { receiver.start() }
-        // receiverThread.start()
-
     }
 
     // 应用层相关
@@ -198,7 +156,6 @@ class ReceiverFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         receiver.stop()
-        // receiverThread.interrupt()
         lifecycleScope.launch {
             if (broadcastReceiver != null) {
                 activity?.unregisterReceiver(broadcastReceiver)

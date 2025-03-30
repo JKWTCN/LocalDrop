@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.icloudwar.localdrop.FileInfo
 import com.icloudwar.localdrop.FileType
+import com.icloudwar.localdrop.FileType.*
 import com.icloudwar.localdrop.R
 
 class FileAdapter(
@@ -27,13 +28,13 @@ class FileAdapter(
             // 根据文件类型设置图标
             ivIcon.setImageResource(
                 when (file.fileType) {
-                    FileType.TEXT -> R.drawable.text
-                    FileType.IMG -> R.drawable.img
-                    FileType.FILE -> R.drawable.file
-                    FileType.AUDIO -> R.drawable.file
-                    FileType.VIDEO -> R.drawable.file
-                    FileType.DIR -> R.drawable.file
-                    FileType.BIG_FILE -> R.drawable.file
+                    TEXT -> R.drawable.text
+                    IMG -> R.drawable.img
+                    FILE -> R.drawable.file
+                    AUDIO -> R.drawable.ic_audio
+                    VIDEO -> R.drawable.ic_video
+                    DIR -> R.drawable.file
+                    QUICK_MESSAGE -> R.drawable.ic_message
                 }
             )
 

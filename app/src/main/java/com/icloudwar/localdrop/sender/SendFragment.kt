@@ -45,7 +45,6 @@ class SendFragment : Fragment() {
     // 日志相关
     private fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-
     }
 
     private fun show_log(message: String) {
@@ -59,6 +58,8 @@ class SendFragment : Fragment() {
     var wifiP2pDeviceList = mutableListOf<WifiP2pDevice>()
     private val deviceAdapter = DeviceAdapter(wifiP2pDeviceList)
     private var filesAdapter: FileAdapter? = null
+
+    private var progressDialog: AlertDialog? = null
 
 
     private val recyclerView by lazy {
@@ -193,9 +194,18 @@ class SendFragment : Fragment() {
             show_log("获取到根地址,开始发送 $ipAddress")
             // 客户端发送文件
             // val sender = ipAddress?.let { com.icloudwar.localdrop.sender.FileSender(it, 27431) }
+            val alertBuilder = AlertDialog.Builder(activity)
+            alertBuilder.setTitle("正在发送文件")
+                .setMessage("正在发送")
+            alertBuilder.setCancelable(false)
+            val dialog = alertBuilder.create()
+            dialog.show()
+            var i = 0
             for (waitSendFile in waitSendFiles) {
                 val sender = ipAddress?.let { FileSender(it, 27431) }
                 if (sender != null) {
+                    i += 1
+                    dialog.setMessage("${waitSendFile.fileName}($i/${waitSendFiles.size})")
                     val t = Thread {
                         activity?.applicationContext?.let { sender.sendFile(waitSendFile, it) }
                     }
@@ -203,6 +213,8 @@ class SendFragment : Fragment() {
                     t.join()
                 }
             }
+            dialog.cancel()
+            showToast("文件发送完毕。")
             waitSendFiles.clear()
             filesAdapter?.notifyDataSetChanged()
 
@@ -448,8 +460,17 @@ class SendFragment : Fragment() {
                 this@SendFragment.wifiP2pInfo = wifiP2pInfo
                 val ipAddress = wifiP2pInfo.groupOwnerAddress?.hostAddress
                 show_log("获取到根地址,开始发送 $ipAddress")
+                val alertBuilder = AlertDialog.Builder(activity)
+                alertBuilder.setTitle("正在发送文件")
+                    .setMessage("正在发送")
+                alertBuilder.setCancelable(false)
+                val dialog = alertBuilder.create()
+                dialog.show()
+                var i = 0
                 // 客户端发送文件
                 for (waitSendFile in waitSendFiles) {
+                    i += 1
+                    dialog.setMessage("${waitSendFile.fileName}($i/${waitSendFiles.size})")
                     val sender = ipAddress?.let { FileSender(it, 27431) }
                     if (sender != null) {
                         val t = Thread {
@@ -464,6 +485,8 @@ class SendFragment : Fragment() {
                         t.join()
                     }
                 }
+                dialog.cancel()
+                showToast("文件发送完毕，共{$i}个。")
                 waitSendFiles.clear()
                 filesAdapter?.notifyDataSetChanged()
             }

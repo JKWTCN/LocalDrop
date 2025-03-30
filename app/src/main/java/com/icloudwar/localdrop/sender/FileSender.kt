@@ -3,6 +3,7 @@ package com.icloudwar.localdrop.sender
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import com.icloudwar.localdrop.FileInfo
 import com.icloudwar.localdrop.FileType
 import kotlinx.serialization.json.buildJsonObject
@@ -16,6 +17,10 @@ class FileSender(private val host: String, private val port: Int) {
 
     private fun showLog(msg: String) {
         Log.i("FileSender", msg)
+    }
+
+    private fun showToast(message: String, context: Context) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     fun sendFile(file: FileInfo, context: Context) {
@@ -41,7 +46,6 @@ class FileSender(private val host: String, private val port: Int) {
             // 发送元数据内容
             output.write(metaBytes)
             output.flush()
-
             showLog("begin send ${file.fileName}")
             // 分块发送文件内容
             if (file.fileType != FileType.QUICK_MESSAGE) {
@@ -56,7 +60,6 @@ class FileSender(private val host: String, private val port: Int) {
                 }
             }
             showLog("${file.fileName} sent")
-
         }
     }
 }

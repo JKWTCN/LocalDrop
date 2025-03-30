@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <Button
         android:id="@+id/btnHistory"
@@ -15,8 +14,16 @@
         android:layout_alignParentEnd="true"
         android:text="历史记录" />
 
+    <Button
+        android:id="@+id/btnClearText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/btnHistory"
+        android:text="清空接收日志" />
+
 
     <TextView
+        android:id="@+id/rev_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

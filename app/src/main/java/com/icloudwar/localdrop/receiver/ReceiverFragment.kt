@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
@@ -33,7 +34,6 @@ class ReceiverFragment : Fragment() {
     // 日志相关
     private fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-
     }
 
     private fun show_log(message: String) {
@@ -46,6 +46,13 @@ class ReceiverFragment : Fragment() {
         activity?.findViewById<Button>(R.id.btnHistory)
     }
 
+    private val btnClearText by lazy {
+        activity?.findViewById<Button>(R.id.btnClearText)
+    }
+    private val textRev by lazy {
+        activity?.findViewById<TextView>(R.id.rev_text)
+    }
+
     // 0:所有人 1:收藏 2:无
     private var rev_mode = 0;
     private fun initView() {
@@ -53,6 +60,9 @@ class ReceiverFragment : Fragment() {
         mActivity.supportActionBar?.title = "LocalDrop (接收模式)"
         btnHistory?.setOnClickListener {
             // todo 历史
+        }
+        btnClearText?.setOnClickListener {
+            textRev?.text = ""
         }
     }
 
@@ -89,6 +99,7 @@ class ReceiverFragment : Fragment() {
         createGroup()
         receiver.start()
     }
+
 
     // 应用层相关
     @SuppressLint("MissingPermission")

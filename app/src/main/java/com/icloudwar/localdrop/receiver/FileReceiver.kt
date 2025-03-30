@@ -1,21 +1,31 @@
 package com.icloudwar.localdrop.receiver// com.icloudwar.localdrop.receiver.FileReceiver.kt
+import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.util.Log
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.icloudwar.localdrop.FileInfo
 import com.icloudwar.localdrop.FileType
 import org.json.JSONObject
 import java.io.*
+import java.lang.ref.WeakReference
 import java.net.ServerSocket
 import java.net.SocketException
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.min
 
 class FileReceiver(private val port: Int) {
     private var bigStartT = Thread()
     private var bigSocket = ServerSocket()
+
+
 
     private fun showLog(msg: String) {
         Log.i("FileReceiver", msg)
@@ -25,6 +35,13 @@ class FileReceiver(private val port: Int) {
         bigSocket.close()
         bigStartT.interrupt()
     }
+
+    fun getNowTimeString() {
+        val currentTimeMillis: Long = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        dateFormat.format(Date(currentTimeMillis))
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun start() {

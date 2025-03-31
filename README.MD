@@ -1,10 +1,9 @@
 # LocalDrop
 
-LocalDrop 是一个 Android 局域网文件传输应用。
+LocalDrop 是一个无需在一个局域网内的 Android 文件传输应用。
 
 ## 功能特点
 
-- 局域网内设备发现
 - P2P文件快速传输
 - 支持多种文件类型
 - 无需互联网连接

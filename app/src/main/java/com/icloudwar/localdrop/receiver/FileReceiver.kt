@@ -123,6 +123,7 @@ class FileReceiver(private val port: Int) {
                                 showLog("${fileInfo.fileName} saved")
                             }
                         } else {
+                            historyManager?.addHistory(fileInfo, null)
                             showLog("rev:${fileInfo.info}")
                         }
 

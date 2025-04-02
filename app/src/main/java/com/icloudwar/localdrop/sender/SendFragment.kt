@@ -170,6 +170,7 @@ class SendFragment : Fragment() {
         return wm.isWifiEnabled
     }
 
+
     @SuppressLint("MissingPermission")
     private fun connectAndSendFIles(wifiP2pDevice: WifiP2pDevice) {
         if (wifiP2pDevice.status == WifiP2pDevice.AVAILABLE) {
@@ -182,7 +183,7 @@ class SendFragment : Fragment() {
                 wifiP2pConfig,
                 object : WifiP2pManager.ActionListener {
                     override fun onSuccess() {
-                        show_log("connect onSuccess")
+                        show_log("连接成功")
                     }
 
                     override fun onFailure(reason: Int) {
@@ -191,32 +192,38 @@ class SendFragment : Fragment() {
                 })
         } else if (wifiP2pDevice.status == WifiP2pDevice.INVITED || wifiP2pDevice.status == WifiP2pDevice.CONNECTED) {
             val ipAddress = wifiP2pInfo?.groupOwnerAddress?.hostAddress
-            show_log("获取到根地址,开始发送 $ipAddress")
-            // 客户端发送文件
-            // val sender = ipAddress?.let { com.icloudwar.localdrop.sender.FileSender(it, 27431) }
-            val alertBuilder = AlertDialog.Builder(activity)
-            alertBuilder.setTitle("正在发送文件")
-                .setMessage("正在发送")
-            alertBuilder.setCancelable(false)
-            val dialog = alertBuilder.create()
-            dialog.show()
-            var i = 0
-            for (waitSendFile in waitSendFiles) {
-                val sender = ipAddress?.let { FileSender(it, 27431) }
-                if (sender != null) {
-                    i += 1
-                    dialog.setMessage("${waitSendFile.fileName}($i/${waitSendFiles.size})")
-                    val t = Thread {
-                        activity?.applicationContext?.let { sender.sendFile(waitSendFile, it) }
+            if (ipAddress == null) {
+                show_log("连接失败，获取到根地址异常")
+                showToast("连接失败，获取到根地址异常")
+            } else {
+                showToast("开始发送文件");
+                show_log("获取到根地址,开始发送 $ipAddress")
+                // 客户端发送文件
+                // val sender = ipAddress?.let { com.icloudwar.localdrop.sender.FileSender(it, 27431) }
+                val alertBuilder = AlertDialog.Builder(activity)
+                alertBuilder.setTitle("正在发送文件")
+                    .setMessage("正在发送")
+                alertBuilder.setCancelable(false)
+                val dialog = alertBuilder.create()
+                dialog.show()
+                var i = 0
+                for (waitSendFile in waitSendFiles) {
+                    val sender = ipAddress?.let { FileSender(it, 27431) }
+                    if (sender != null) {
+                        i += 1
+                        dialog.setMessage("${waitSendFile.fileName}($i/${waitSendFiles.size})")
+                        val t = Thread {
+                            activity?.applicationContext?.let { sender.sendFile(waitSendFile, it) }
+                        }
+                        t.start()
+                        t.join()
                     }
-                    t.start()
-                    t.join()
                 }
+                dialog.cancel()
+                showToast("文件发送完毕。")
+                waitSendFiles.clear()
+                filesAdapter?.notifyDataSetChanged()
             }
-            dialog.cancel()
-            showToast("文件发送完毕。")
-            waitSendFiles.clear()
-            filesAdapter?.notifyDataSetChanged()
 
         }
     }

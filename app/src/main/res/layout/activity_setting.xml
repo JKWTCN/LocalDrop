@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="页面施工中"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="本页还在施工中,先看其他东西吧qwq" />
-
+    <!-- 头像 -->
     <ImageView
         android:id="@+id/iv_avatar"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:contentDescription="头像"
-        android:src="@drawable/avatar" />
+        android:layout_marginBottom="24dp"
+        app:srcCompat="@drawable/avatar"
+        android:contentDescription="头像"/>
 
-    <TextView
+    <!-- GitHub 链接 -->
+    <Button
         android:id="@+id/btn_github"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_avatar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:text="GitHub:\nhttps://github.com/JKWTCN/LocalDrop" />
+        android:text="GitHub"
+        android:layout_marginBottom="16dp"
+        style="@style/Widget.AppCompat.Button.Colored"/>
 
-    <TextView
+    <!-- B站 链接 -->
+    <Button
         android:id="@+id/btn_bilibili"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_github"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="Bilibili:\nhttps://space.bilibili.com/283390377" />
+        android:text="Bilibili"
+        style="@style/Widget.AppCompat.Button.Colored"/>
 
-</RelativeLayout>
+</LinearLayout>

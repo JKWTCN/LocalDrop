@@ -68,9 +68,9 @@ class MainActivity : AppCompatActivity() {
         val type = intent.type // 类型
         when (intent.action) {
             Intent.ACTION_SEND_MULTIPLE -> {
-                val type = intent.type ?: return
+                intent.type ?: return
                 val uris = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
-                if (uris != null && uris.isNotEmpty()) {
+                if (!uris.isNullOrEmpty()) {
                     navigateToSendFragmentWithData(uris)
                 }
             }

@@ -79,7 +79,7 @@ class SendDirectBroadcastReceiver(
                             }
                             Log.i(
                                 Tag,
-                                "peer信息:设备名:${i.deviceName};设备地址:${i.deviceAddress};设备类型:${i.primaryDeviceType};设备状态:${_status_text}"
+                                "peer信息:设备名:${i.deviceName};设备地址:${i.deviceAddress};设备类型:${i.primaryDeviceType};设备状态:${_status_text};"
                             )
                         }
                     } else {
@@ -99,7 +99,7 @@ class SendDirectBroadcastReceiver(
                     wifiP2pManager.requestConnectionInfo(wifiP2pChannel) { info ->
                         if (info != null) {
                             directActionListener.onConnectionInfoAvailable(info)
-                            // Log.i(Tag, "已连接 P2P 设备,info为:${info}")
+                            Log.i(Tag, "已连接 P2P 设备,info为:${info}")
                         }
                     }
 

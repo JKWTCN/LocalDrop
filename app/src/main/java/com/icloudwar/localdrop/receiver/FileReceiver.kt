@@ -27,7 +27,19 @@ class FileReceiver(private val port: Int) {
     private var bigSocket = ServerSocket()
     private var historyManager: FileHistoryManager? = null
 
+    // 进度回调接口
+    interface ProgressCallback {
+        fun onStart(fileName: String)
+        fun onProgress(progress: Int)
+        fun onComplete()
+    }
 
+    private var progressCallback: ProgressCallback? = null
+
+    // 添加设置回调的方法
+    fun setProgressCallback(callback: ProgressCallback) {
+        this.progressCallback = callback
+    }
     private fun showLog(msg: String) {
         Log.i("FileReceiver", msg)
     }
@@ -75,6 +87,9 @@ class FileReceiver(private val port: Int) {
                             info = metaJson.getString("info"),
                             raw = null
                         )
+
+                        // 通知开始接收
+                        progressCallback?.onStart(fileInfo.fileName)
                         if (fileInfo.fileType != FileType.QUICK_MESSAGE) {// 处理文件名
                             val ext = fileInfo.fileName.substringAfterLast('.', "")
                             val (baseName, extension) = Pair(
@@ -105,6 +120,7 @@ class FileReceiver(private val port: Int) {
                             FileOutputStream(targetFile).use { fos ->
                                 val buffer = ByteArray(8192)
                                 var remaining = fileInfo.fileSize
+                                var totalRead: Long = 0
                                 // 分块接收文件内容
                                 while (remaining > 0) {
                                     val readSize = min(
@@ -116,6 +132,11 @@ class FileReceiver(private val port: Int) {
                                     if (bytesRead == -1) break
                                     fos.write(buffer, 0, bytesRead)
                                     remaining -= bytesRead
+                                    totalRead += bytesRead
+
+                                    // 计算并更新进度
+                                    val progress = (totalRead * 100 / fileInfo.fileSize).toInt()
+                                    progressCallback?.onProgress(progress)
                                 }
                                 fos.flush()
                                 // 添加历史记录
@@ -126,7 +147,8 @@ class FileReceiver(private val port: Int) {
                             historyManager?.addHistory(fileInfo, null)
                             showLog("rev:${fileInfo.info}")
                         }
-
+                        // 通知接收完成
+                        progressCallback?.onComplete()
                     }
                 } catch (e: InterruptedException) {
                     showLog("fileHandleClient已退出")

@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@id/btnHistory"
+        android:visibility="invisible"
         android:text="清空接收日志" />
 
 
@@ -28,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="" />
+        android:text="接收界面" />
 
 
 </RelativeLayout>

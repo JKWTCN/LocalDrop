@@ -1,6 +1,7 @@
 package com.icloudwar.localdrop.receiver
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.net.wifi.p2p.WifiP2pDevice
@@ -13,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -54,12 +56,43 @@ class ReceiverFragment : Fragment() {
         activity?.findViewById<TextView>(R.id.rev_text)
     }
 
+    // 在ReceiverFragment类中添加这些成员变量
+    private var progressDialog: AlertDialog? = null
+    private var progressBar: ProgressBar? = null
+    private var progressTextView: TextView? = null
+
+    // 添加这两个方法用于控制进度对话框
+    private fun showProgressDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("正在接收文件")
+        builder.setCancelable(false)
+
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_file_progress, null)
+        progressBar = view.findViewById(R.id.progressBar)
+        progressTextView = view.findViewById(R.id.progressText)
+        builder.setView(view)
+
+        progressDialog = builder.create()
+        progressDialog?.show()
+    }
+
+    private fun updateProgress(progress: Int, fileName: String) {
+        progressBar?.progress = progress
+        progressTextView?.text = "正在接收: $fileName ($progress%)"
+    }
+
+    private fun dismissProgressDialog() {
+        progressDialog?.dismiss()
+        progressDialog = null
+    }
+
     // 0:所有人 1:收藏 2:无
     private var rev_mode = 0;
     private fun initView() {
         val mActivity = activity as AppCompatActivity
         mActivity.supportActionBar?.title = "LocalDrop (接收模式)"
         btnHistory?.setOnClickListener {
+            // todo 历史
             val intent = Intent(activity, FileHistoryActivity::class.java)
             startActivity(intent)
         }
@@ -100,6 +133,31 @@ class ReceiverFragment : Fragment() {
             )
         }
         createGroup()
+        // 设置进度回调
+        receiver.setProgressCallback(object : FileReceiver.ProgressCallback {
+            override fun onStart(fileName: String) {
+                activity?.runOnUiThread {
+                    showProgressDialog()
+                    updateProgress(0, fileName)
+                }
+            }
+
+            override fun onProgress(progress: Int) {
+                activity?.runOnUiThread {
+                    progressTextView?.text?.let { currentText ->
+                        var fileName=currentText.toString().replace("正在接收: ","").substringBefore(" (")
+                        updateProgress(progress, fileName)
+                    }
+                }
+            }
+
+            override fun onComplete() {
+                activity?.runOnUiThread {
+                    dismissProgressDialog()
+                    showToast("文件接收完成")
+                }
+            }
+        })
 
         historyManager?.let { receiver.start(it) }
     }

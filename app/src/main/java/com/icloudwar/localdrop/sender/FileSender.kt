@@ -22,6 +22,16 @@ class FileSender(private val host: String, private val port: Int) {
     private fun showToast(message: String, context: Context) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
+    interface ProgressCallback {
+        fun onProgress(progress: Int)
+    }
+
+    private var progressCallback: ProgressCallback? = null
+
+    // 设置回调
+    fun setProgressCallback(callback: ProgressCallback) {
+        this.progressCallback = callback
+    }
 
     fun sendFile(file: FileInfo, context: Context) {
         Socket(host, port).use { socket ->
@@ -53,9 +63,13 @@ class FileSender(private val host: String, private val port: Int) {
                 context.contentResolver.openInputStream(uri)?.use { input ->
                     val buffer = ByteArray(8192)
                     var bytesRead: Int
+                    var totalSent: Long = 0
                     while (input.read(buffer).also { bytesRead = it } != -1) {
                         output.write(buffer, 0, bytesRead)
                     }
+                    // 计算并更新进度
+                    val progress = (totalSent * 100 / file.fileSize).toInt()
+                    progressCallback?.onProgress(progress)
                     output.flush()
                 }
             }

@@ -23,6 +23,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -33,12 +34,16 @@ import androidx.appcompat.app.AppCompatActivity.WIFI_P2P_SERVICE
 import androidx.appcompat.app.AppCompatActivity.WIFI_SERVICE
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.icloudwar.localdrop.FileInfo
 import com.icloudwar.localdrop.FileType
 import com.icloudwar.localdrop.R
 import com.icloudwar.localdrop.receiver.DirectActionListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SendFragment : Fragment() {
@@ -58,9 +63,6 @@ class SendFragment : Fragment() {
     var wifiP2pDeviceList = mutableListOf<WifiP2pDevice>()
     private val deviceAdapter = DeviceAdapter(wifiP2pDeviceList)
     private var filesAdapter: FileAdapter? = null
-
-    private var progressDialog: AlertDialog? = null
-
 
     private val recyclerView by lazy {
         activity?.findViewById<RecyclerView>(R.id.horizontalListView)
@@ -82,6 +84,47 @@ class SendFragment : Fragment() {
     }
     private val btnDisconnect by lazy {
         activity?.findViewById<Button>(R.id.btnDisconnect)
+    }
+
+
+    private var progressDialog: AlertDialog? = null
+    private var progressBar: ProgressBar? = null
+    private var progressTextView: TextView? = null
+
+    private fun showProgressDialog(totalFiles: Int) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("正在发送文件")
+        builder.setCancelable(false)
+
+        val view =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_file_progress, null)
+        progressBar = view.findViewById(R.id.progressBar)
+        progressTextView = view.findViewById(R.id.progressText)
+
+        // 设置总文件数
+        progressBar?.max = totalFiles * 100  // 每个文件100%，总共totalFiles*100
+        progressBar?.progress = 0
+
+        builder.setView(view)
+        progressDialog = builder.create()
+        progressDialog?.show()
+    }
+
+    private fun updateProgress(
+        currentFile: Int,
+        totalFiles: Int,
+        fileProgress: Int,
+        fileName: String
+    ) {
+        // 计算总体进度 (前n-1个文件已完成100%，当前文件完成fileProgress%)
+        val totalProgress = (currentFile - 1) * 100 + fileProgress
+        progressBar?.progress = totalProgress
+        progressTextView?.text = "正在发送: $fileName ($currentFile/$totalFiles) - $fileProgress%"
+    }
+
+    private fun dismissProgressDialog() {
+        progressDialog?.dismiss()
+        progressDialog = null
     }
 
     @SuppressLint("Range")
@@ -198,33 +241,67 @@ class SendFragment : Fragment() {
             } else {
                 showToast("开始发送文件");
                 show_log("获取到根地址,开始发送 $ipAddress")
-                // 客户端发送文件
-                // val sender = ipAddress?.let { com.icloudwar.localdrop.sender.FileSender(it, 27431) }
-                val alertBuilder = AlertDialog.Builder(activity)
-                alertBuilder.setTitle("正在发送文件")
-                    .setMessage("正在发送")
-                alertBuilder.setCancelable(false)
-                val dialog = alertBuilder.create()
-                dialog.show()
-                var i = 0
-                for (waitSendFile in waitSendFiles) {
-                    val sender = ipAddress?.let { FileSender(it, 27431) }
-                    if (sender != null) {
-                        i += 1
-                        dialog.setMessage("${waitSendFile.fileName}($i/${waitSendFiles.size})")
-                        val t = Thread {
-                            activity?.applicationContext?.let { sender.sendFile(waitSendFile, it) }
-                        }
-                        t.start()
-                        t.join()
-                    }
+                // 显示进度对话框
+                activity?.runOnUiThread {
+                    showProgressDialog(waitSendFiles.size)
                 }
-                dialog.cancel()
-                showToast("文件发送完毕。")
-                waitSendFiles.clear()
-                filesAdapter?.notifyDataSetChanged()
-            }
+                // 使用协程发送文件
+                lifecycleScope.launch {
+                    waitSendFiles.forEachIndexed { index, file ->
+                        val sender = FileSender(ipAddress, 27431).apply {
+                            setProgressCallback(object : FileSender.ProgressCallback {
+                                override fun onProgress(progress: Int) {
+                                    activity?.runOnUiThread {
+                                        updateProgress(
+                                            index + 1,
+                                            waitSendFiles.size,
+                                            progress,
+                                            file.fileName
+                                        )
+                                    }
+                                }
+                            })
+                        }
 
+                        withContext(Dispatchers.IO) {
+                            sender.sendFile(file, requireContext().applicationContext)
+                        }
+                    }
+
+                    activity?.runOnUiThread {
+                        dismissProgressDialog()
+                        showToast("文件发送完毕。")
+                        waitSendFiles.clear()
+                        filesAdapter?.notifyDataSetChanged()
+                    }
+                    // // 客户端发送文件
+                    // // val sender = ipAddress?.let { com.icloudwar.localdrop.sender.FileSender(it, 27431) }
+                    // val alertBuilder = AlertDialog.Builder(activity)
+                    // alertBuilder.setTitle("正在发送文件")
+                    //     .setMessage("正在发送")
+                    // alertBuilder.setCancelable(false)
+                    // val dialog = alertBuilder.create()
+                    // dialog.show()
+                    // var i = 0
+                    // for (waitSendFile in waitSendFiles) {
+                    //     val sender = ipAddress?.let { FileSender(it, 27431) }
+                    //     if (sender != null) {
+                    //         i += 1
+                    //         dialog.setMessage("${waitSendFile.fileName}($i/${waitSendFiles.size})")
+                    //         val t = Thread {
+                    //             activity?.applicationContext?.let { sender.sendFile(waitSendFile, it) }
+                    //         }
+                    //         t.start()
+                    //         t.join()
+                    //     }
+                    // }
+                    // dialog.cancel()
+                    // showToast("文件发送完毕。")
+                    // waitSendFiles.clear()
+                    // filesAdapter?.notifyDataSetChanged()
+                }
+
+            }
         }
     }
 
@@ -368,11 +445,11 @@ class SendFragment : Fragment() {
     }
 
     // 设备相关
-    private lateinit var wifiP2pChannel: WifiP2pManager.Channel
-    private val wifiP2pManager: WifiP2pManager by lazy {
+    lateinit var wifiP2pChannel: WifiP2pManager.Channel
+    val wifiP2pManager: WifiP2pManager by lazy {
         activity?.getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
     }
-    private var broadcastReceiver: BroadcastReceiver? = null
+    var broadcastReceiver: BroadcastReceiver? = null
     var discoverThread = Thread()
 
     @SuppressLint("MissingPermission")
@@ -455,6 +532,7 @@ class SendFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+        dismissProgressDialog()
         discoverThread.interrupt()
         if (broadcastReceiver != null) {
             activity?.unregisterReceiver(broadcastReceiver)
@@ -478,35 +556,70 @@ class SendFragment : Fragment() {
                 this@SendFragment.wifiP2pInfo = wifiP2pInfo
                 val ipAddress = wifiP2pInfo.groupOwnerAddress?.hostAddress
                 show_log("获取到根地址,开始发送 $ipAddress")
-                val alertBuilder = AlertDialog.Builder(activity)
-                alertBuilder.setTitle("正在发送文件")
-                    .setMessage("正在发送")
-                alertBuilder.setCancelable(false)
-                val dialog = alertBuilder.create()
-                dialog.show()
-                var i = 0
-                // 客户端发送文件
-                for (waitSendFile in waitSendFiles) {
-                    i += 1
-                    dialog.setMessage("${waitSendFile.fileName}($i/${waitSendFiles.size})")
-                    val sender = ipAddress?.let { FileSender(it, 27431) }
-                    if (sender != null) {
-                        val t = Thread {
-                            activity?.applicationContext?.let {
-                                sender.sendFile(
-                                    waitSendFile,
-                                    it
-                                )
-                            }
+                // 显示进度对话框
+                activity?.runOnUiThread {
+                    showProgressDialog(waitSendFiles.size)
+                }
+
+                // 使用协程发送文件
+                lifecycleScope.launch {
+                    waitSendFiles.forEachIndexed { index, file ->
+                        val sender = FileSender(ipAddress!!, 27431).apply {
+                            setProgressCallback(object : FileSender.ProgressCallback {
+                                override fun onProgress(progress: Int) {
+                                    activity?.runOnUiThread {
+                                        updateProgress(
+                                            index + 1,
+                                            waitSendFiles.size,
+                                            progress,
+                                            file.fileName
+                                        )
+                                    }
+                                }
+                            })
                         }
-                        t.start()
-                        t.join()
+
+                        withContext(Dispatchers.IO) {
+                            sender.sendFile(file, requireContext().applicationContext)
+                        }
+                    }
+
+                    activity?.runOnUiThread {
+                        dismissProgressDialog()
+                        showToast("文件发送完毕，共${waitSendFiles.size}个。")
+                        waitSendFiles.clear()
+                        filesAdapter?.notifyDataSetChanged()
                     }
                 }
-                dialog.cancel()
-                showToast("文件发送完毕，共{$i}个。")
-                waitSendFiles.clear()
-                filesAdapter?.notifyDataSetChanged()
+                // val alertBuilder = AlertDialog.Builder(activity)
+                // alertBuilder.setTitle("正在发送文件")
+                //     .setMessage("正在发送")
+                // alertBuilder.setCancelable(false)
+                // val dialog = alertBuilder.create()
+                // dialog.show()
+                // var i = 0
+                // // 客户端发送文件
+                // for (waitSendFile in waitSendFiles) {
+                //     i += 1
+                //     dialog.setMessage("${waitSendFile.fileName}($i/${waitSendFiles.size})")
+                //     val sender = ipAddress?.let { FileSender(it, 27431) }
+                //     if (sender != null) {
+                //         val t = Thread {
+                //             activity?.applicationContext?.let {
+                //                 sender.sendFile(
+                //                     waitSendFile,
+                //                     it
+                //                 )
+                //             }
+                //         }
+                //         t.start()
+                //         t.join()
+                //     }
+                // }
+                // dialog.cancel()
+                // showToast("文件发送完毕，共{$i}个。")
+                // waitSendFiles.clear()
+                // filesAdapter?.notifyDataSetChanged()
             }
         }
 

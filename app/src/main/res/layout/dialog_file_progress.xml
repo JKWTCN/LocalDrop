@@ -9,7 +9,7 @@
         android:id="@+id/progressText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="正在接收文件..."
+        android:text="正在传输文件..."
         android:textSize="16sp"
         android:paddingBottom="8dp"/>
 

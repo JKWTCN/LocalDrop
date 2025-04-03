@@ -269,7 +269,7 @@ class SendFragment : Fragment() {
                 .setPositiveButton("确定") { _, i -> // 按下确定键后的事件
                     val text = et.text.toString()
                     val textTransfer = FileInfo(
-                        fileName = "text",
+                        fileName = "QUICK_MESSAGE.txt",
                         fileSize = text.length.toLong(),
                         fileType = FileType.QUICK_MESSAGE,
                         info = text,
@@ -292,6 +292,7 @@ class SendFragment : Fragment() {
 
                 override fun onFailure(reasonCode: Int) {
                     show_log("discoverPeers Failure：$reasonCode")
+                    // showToast("发现设备失败,请重试。错误代码：$reasonCode")
                 }
             })
         }
@@ -390,6 +391,7 @@ class SendFragment : Fragment() {
 
                         override fun onFailure(reasonCode: Int) {
                             show_log("discoverPeers Failure：$reasonCode")
+                            // showToast("发现设备失败,请重试。错误代码：$reasonCode")
                         }
                     })
                 Thread.sleep(2000)

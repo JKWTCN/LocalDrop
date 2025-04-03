@@ -69,7 +69,7 @@ class FileHistoryActivity : AppCompatActivity() {
 
     private fun loadHistories() {
         historyList.clear()
-        historyList.addAll(historyManager.getAllHistories())
+        historyList.addAll(historyManager.getAllHistories().subList(0, 20))
         adapter.notifyDataSetChanged()
     }
 

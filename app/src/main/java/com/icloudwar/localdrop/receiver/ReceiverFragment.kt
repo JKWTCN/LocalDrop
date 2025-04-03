@@ -60,7 +60,6 @@ class ReceiverFragment : Fragment() {
         val mActivity = activity as AppCompatActivity
         mActivity.supportActionBar?.title = "LocalDrop (接收模式)"
         btnHistory?.setOnClickListener {
-            // todo 历史
             val intent = Intent(activity, FileHistoryActivity::class.java)
             startActivity(intent)
         }

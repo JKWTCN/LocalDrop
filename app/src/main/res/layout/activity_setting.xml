@@ -7,27 +7,52 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="页面施工中"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
 
-    <!-- 头像 -->
-    <ImageView
-        android:id="@+id/iv_avatar"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginBottom="24dp"
-        app:srcCompat="@drawable/avatar"
-        android:contentDescription="头像"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="端口号:"
+            android:layout_marginEnd="8dp"/>
 
+        <EditText
+            android:id="@+id/et_port"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="5"/>
+        <!-- 保存按钮 -->
+        <Button
+            android:id="@+id/btn_save_port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存"
+
+            style="@style/Widget.AppCompat.Button.Colored"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_resetToDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="重置设置"
+        style="@style/Widget.AppCompat.Button.Colored"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
     <!-- GitHub 链接 -->
     <Button
         android:id="@+id/btn_github"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GitHub"
-        android:layout_marginBottom="16dp"
         style="@style/Widget.AppCompat.Button.Colored"/>
 
     <!-- B站 链接 -->
@@ -37,5 +62,6 @@
         android:layout_height="wrap_content"
         android:text="Bilibili"
         style="@style/Widget.AppCompat.Button.Colored"/>
+    </LinearLayout>
 
 </LinearLayout>

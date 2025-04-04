@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -15,9 +16,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.icloudwar.localdrop.setting.MySettings
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var mySettings: MySettings
     // 需要权限列表
     private val requestedPermissions = buildList {
         add(Manifest.permission.INTERNET)
@@ -37,6 +41,9 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
     }
+    private fun show_log(message: String) {
+        Log.i("MainActivity", message)
+    }
 
     private val requestPermissionLaunch = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -50,6 +57,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         supportActionBar?.title = "LocalDrop (接收模式)"
+        // 初始化设置
+        mySettings = MySettings(this)
+        // 获取当前端口设置
+        val currentPort = mySettings.getPort()
+        show_log( "Current port: $currentPort")
     }
 
 

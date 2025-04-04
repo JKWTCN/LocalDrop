@@ -18,7 +18,7 @@ class SendDirectBroadcastReceiver(
     private val directActionListener: DirectActionListener
 ) : BroadcastReceiver() {
 
-    private val Tag = "DirectBroadcastReceiver";
+    private val Tag = "SendDirectBroadcastReceiver";
 
 
     companion object {

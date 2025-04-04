@@ -27,6 +27,7 @@ import androidx.lifecycle.lifecycleScope
 import com.icloudwar.localdrop.R
 import com.icloudwar.localdrop.fileHistory.FileHistoryActivity
 import com.icloudwar.localdrop.fileHistory.FileHistoryManager
+import com.icloudwar.localdrop.setting.MySettings
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -56,12 +57,13 @@ class ReceiverFragment : Fragment() {
         activity?.findViewById<TextView>(R.id.rev_text)
     }
 
-    // 在ReceiverFragment类中添加这些成员变量
     private var progressDialog: AlertDialog? = null
     private var progressBar: ProgressBar? = null
     private var progressTextView: TextView? = null
+    private lateinit var mySettings: MySettings
 
-    // 添加这两个方法用于控制进度对话框
+
+    //控制进度对话框
     private fun showProgressDialog() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("正在接收文件")
@@ -91,6 +93,7 @@ class ReceiverFragment : Fragment() {
     private fun initView() {
         val mActivity = activity as AppCompatActivity
         mActivity.supportActionBar?.title = "LocalDrop (接收模式)"
+        mySettings = MySettings(context?.applicationContext!!)
         btnHistory?.setOnClickListener {
             // todo 历史
             val intent = Intent(activity, FileHistoryActivity::class.java)
@@ -159,7 +162,10 @@ class ReceiverFragment : Fragment() {
             }
         })
 
-        historyManager?.let { receiver.start(it) }
+        historyManager?.let {
+            val currentPort = mySettings.getPort()
+            receiver.port=currentPort
+            receiver.start(it) }
     }
 
 

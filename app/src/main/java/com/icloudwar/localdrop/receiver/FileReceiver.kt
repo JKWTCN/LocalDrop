@@ -22,7 +22,7 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.min
 
-class FileReceiver(private val port: Int) {
+class FileReceiver(public var port: Int) {
     private var bigStartT = Thread()
     private var bigSocket = ServerSocket()
     private var historyManager: FileHistoryManager? = null
@@ -35,7 +35,6 @@ class FileReceiver(private val port: Int) {
     }
 
     private var progressCallback: ProgressCallback? = null
-
     // 添加设置回调的方法
     fun setProgressCallback(callback: ProgressCallback) {
         this.progressCallback = callback

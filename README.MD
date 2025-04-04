@@ -1,64 +1,46 @@
 # LocalDrop
 
-LocalDrop 是一个无需在一个局域网内的 Android 文件传输应用。
+LocalDrop 是一个利用WifiDirect的，便捷的本地文件传输应用程序，让用户可以在不同设备间快速传输文件。
 
 ## 功能特点
 
-- P2P文件快速传输
-- 支持多种文件类型
-- 无需互联网连接
-- 简单易用的界面
-- 有一个win桌面端（开发中）
+- 无需互联网连接，使用WifiDirect进行传输,不需要设备在同一局域网。
+- 支持多种文件类型传输
+- 简单直观的用户界面
+- 快速配对设备
+- 安全可靠的文件传输
+- 可以和windows设备客户端互相传输文件，PC需要安装[LocalDrop-Desktop](https://github.com/JKWTCN/LocalDrop-Desktop)
 
 ## 系统要求
 
-- Android 6.0 (API 23)及以上
-- 设备需支持 Wi-Fi
+- Android 8.0 (API 26) 或更高版本
+- 支持 Wi-Fi 功能
+- 设备需在同一局域网内
 
-## 构建项目
+## 安装说明
 
-1. 克隆代码仓库:
+1. 从 Release 页面下载最新的 APK 文件
+2. 在 Android 设备上安装 APK
+3. 授予应用所需权限
 
-```bash
-git clone https://github.com/your-username/LocalDrop.git
-```
+## 使用方法
 
-2. 使用 Android Studio 打开项目
-3. 同步 Gradle 文件
-4. 运行项目:
+1. 打开应用或者在其他应用的分享里面选择你要分享的文件选择LocalDrop
+2. 选择要发送的文件
+3. 选择接收设备
+4. 等待传输完成
 
-```bash
-./gradlew assembleDebug
-```
+## 开发环境
 
-## 项目结构
-
-```
-app/                    # 应用主模块
-├─ src/                 # 源代码
-├─ build.gradle.kts     # 应用级构建配置
-build.gradle.kts        # 项目级构建配置
-```
-
-## 使用的技术栈
-
+- Android Studio
 - Kotlin
-- Jetpack Compose
-- Kotlin Coroutines
-- Material Design 3
-- Hilt 依赖注入
+- Minimum SDK: API 26
+- Target SDK: API 34
 
 ## 贡献指南
 
-1. Fork 项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交改动 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 提交 Pull Request
+欢迎提交 Issue 和 Pull Request 来帮助改进项目。
 
 ## 联系方式
 
-项目维护者 - [@浮云战争](https://github.com/JKWTCN)
-
-项目链接: [https://github.com/JKWTCN/LocalDrop](https://github.com/JKWTCN/LocalDrop)
-
+如有问题或建议，请提交 Issue 或联系开发者。

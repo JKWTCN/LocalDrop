@@ -50,7 +50,9 @@ import kotlinx.coroutines.withContext
 class SendFragment : Fragment() {
     // 日志相关
     private fun showToast(message: String) {
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch(Dispatchers.Main) {
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun show_log(message: String) {
@@ -338,7 +340,7 @@ class SendFragment : Fragment() {
         btnScanner?.setOnClickListener {
             if (!wifiP2pEnabled) {
                 show_log("需要先打开Wifi并且关闭移动热点")
-                showToast("需要先打开Wifi并且关闭移动热点")
+                showToast("请尝试打开或重启WiFi并关闭移动热点功能")
                 return@setOnClickListener
             }
             wifiP2pManager.discoverPeers(wifiP2pChannel, object : WifiP2pManager.ActionListener {

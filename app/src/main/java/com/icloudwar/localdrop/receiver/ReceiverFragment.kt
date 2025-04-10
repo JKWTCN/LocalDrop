@@ -28,6 +28,7 @@ import com.icloudwar.localdrop.R
 import com.icloudwar.localdrop.fileHistory.FileHistoryActivity
 import com.icloudwar.localdrop.fileHistory.FileHistoryManager
 import com.icloudwar.localdrop.setting.MySettings
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -37,7 +38,9 @@ class ReceiverFragment : Fragment() {
 
     // 日志相关
     private fun showToast(message: String) {
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch(Dispatchers.Main) {
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun show_log(message: String) {

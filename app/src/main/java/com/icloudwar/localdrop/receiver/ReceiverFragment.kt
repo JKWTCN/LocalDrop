@@ -168,7 +168,10 @@ class ReceiverFragment : Fragment() {
         historyManager?.let {
             val currentPort = mySettings.getPort()
             receiver.port=currentPort
-            receiver.start(it) }
+            receiver.start(
+                context = requireContext(),
+                historyManager =it
+            ) }
     }
 
 

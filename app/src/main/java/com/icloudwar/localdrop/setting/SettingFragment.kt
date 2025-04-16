@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.Fragment
@@ -40,6 +41,10 @@ class SettingFragment : Fragment() {
         activity?.findViewById<Button>(R.id.btn_resetToDefault)
     }
 
+    private  val switch_save_to_pictures by lazy{
+        activity?.findViewById<Switch>(R.id.switch_save_to_pictures)
+    }
+
     private lateinit var mySettings: MySettings
 
     override fun onCreateView(
@@ -64,7 +69,10 @@ class SettingFragment : Fragment() {
     private fun loadSettings() {
         val port = mySettings.getPort()
         et_port?.setText(port.toString())
+        val saveToPictures = mySettings.getSaveToPictures()
+        switch_save_to_pictures?.isChecked = saveToPictures
         show_log("Loaded settings - Port: $port")
+        show_log("Loaded settings - Save to Pictures: $saveToPictures")
     }
 
     /**
@@ -89,6 +97,8 @@ class SettingFragment : Fragment() {
             Toast.makeText(context, "请输入有效的端口号", Toast.LENGTH_SHORT).show()
             show_log("Invalid port number format")
         }
+        val saveToPictures = switch_save_to_pictures?.isChecked ?: false
+        mySettings.setSaveToPictures(saveToPictures)
     }
 
     private fun openUrl(url: String) {
@@ -111,6 +121,9 @@ class SettingFragment : Fragment() {
         loadSettings()
         btn_save_port?.setOnClickListener {
             saveSettings()
+        }
+        switch_save_to_pictures?.setOnClickListener{
+            switch_save_to_pictures?.isChecked?.let { it1 -> mySettings.setSaveToPictures(it1) }
         }
 
         btn_resetToDefault?.setOnClickListener {

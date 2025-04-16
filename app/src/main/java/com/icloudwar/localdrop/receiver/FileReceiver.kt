@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import com.icloudwar.localdrop.FileInfo
 import com.icloudwar.localdrop.FileType
 import com.icloudwar.localdrop.fileHistory.FileHistoryManager
+import com.icloudwar.localdrop.setting.MySettings
 import org.json.JSONObject
 import java.io.*
 import java.lang.ref.WeakReference
@@ -35,10 +36,12 @@ class FileReceiver(public var port: Int) {
     }
 
     private var progressCallback: ProgressCallback? = null
+
     // 添加设置回调的方法
     fun setProgressCallback(callback: ProgressCallback) {
         this.progressCallback = callback
     }
+
     private fun showLog(msg: String) {
         Log.i("FileReceiver", msg)
     }
@@ -56,13 +59,13 @@ class FileReceiver(public var port: Int) {
 
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun start(historyManager: FileHistoryManager) {
+    fun start(context: Context, historyManager: FileHistoryManager) {
         this.historyManager = historyManager
-        bigStartT = Thread { fileHandleClient() }
+        bigStartT = Thread { fileHandleClient(context) }
         bigStartT.start()
     }
 
-    private fun fileHandleClient() {
+    private fun fileHandleClient(context: Context) {
         ServerSocket(port).use { serverSocket ->
             while (true) {
                 try {
@@ -96,11 +99,19 @@ class FileReceiver(public var port: Int) {
                                     '.'
                                 ), ext
                             )
-                            val storageDir = File(
-                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                "LocalDrop"
-                            ).apply {
-                                if (!exists()) mkdirs()
+                            // todo 读取设置
+                            val mySettings = MySettings(context)
+                            val saveToPictures = mySettings.getSaveToPictures()
+                            val storageDir = if (saveToPictures) {
+                                File(
+                                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                                    "LocalDrop"
+                                ).apply { if (!exists()) mkdirs() }
+                            } else {
+                                File(
+                                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                                    "LocalDrop"
+                                ).apply { if (!exists()) mkdirs() }
                             }
                             // 生成唯一文件名
                             var counter = 0

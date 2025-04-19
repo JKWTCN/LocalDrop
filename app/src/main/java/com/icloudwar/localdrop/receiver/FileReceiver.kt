@@ -102,17 +102,18 @@ class FileReceiver(public var port: Int) {
                             // todo 读取设置
                             val mySettings = MySettings(context)
                             val saveToPictures = mySettings.getSaveToPictures()
-                            val storageDir = if (saveToPictures) {
-                                File(
-                                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                                    "LocalDrop"
-                                ).apply { if (!exists()) mkdirs() }
-                            } else {
-                                File(
-                                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                    "LocalDrop"
-                                ).apply { if (!exists()) mkdirs() }
-                            }
+                            val storageDir =
+                                if (saveToPictures && fileInfo.fileType == FileType.IMG) {
+                                    File(
+                                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                                        "LocalDrop"
+                                    ).apply { if (!exists()) mkdirs() }
+                                } else {
+                                    File(
+                                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                                        "LocalDrop"
+                                    ).apply { if (!exists()) mkdirs() }
+                                }
                             // 生成唯一文件名
                             var counter = 0
                             var targetFile: File

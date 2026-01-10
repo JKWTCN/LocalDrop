@@ -1,35 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:padding="@dimen/spacing_md">
 
-    <Button
-        android:id="@+id/btnHistory"
-        android:layout_width="wrap_content"
+    <!-- 状态卡片 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/statusCard"
+        style="@style/Widget.LocalDrop.CardView.Elevated"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:text="历史记录" />
+        android:layout_marginBottom="@dimen/spacing_md"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/btnClearText"
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_lg"
+            android:gravity="center">
+
+            <!-- 状态图标 -->
+            <ImageView
+                android:id="@+id/ivStatusIcon"
+                android:layout_width="@dimen/icon_size_xl"
+                android:layout_height="@dimen/icon_size_xl"
+                android:src="@android:drawable/ic_menu_upload"
+                android:background="@drawable/device_icon_background"
+                android:padding="@dimen/spacing_md"
+                android:contentDescription="接收状态图标"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:text="接收模式已激活"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:textColor="?attr/colorPrimary"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tvDeviceInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:text="等待连接..."
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 操作按钮 -->
+    <LinearLayout
+        android:id="@+id/actionButtons"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/btnHistory"
-        android:visibility="invisible"
-        android:text="清空接收日志" />
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/spacing_lg"
+        app:layout_constraintTop_toBottomOf="@id/statusCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHistory"
+            style="@style/Widget.LocalDrop.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_md"
+            android:text="历史记录"
+            app:icon="@android:drawable/ic_menu_recent_history"
+            tools:ignore="HardcodedText" />
 
-    <TextView
-        android:id="@+id/rev_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="接收界面" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClearText"
+            style="@style/Widget.LocalDrop.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清空日志"
+            android:visibility="gone"
+            app:icon="@android:drawable/ic_menu_delete"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
 
+    <!-- 接收日志（可隐藏） -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/logCard"
+        style="@style/Widget.LocalDrop.CardView.Outlined"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_lg"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/actionButtons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-</RelativeLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_md">
+
+            <TextView
+                android:id="@+id/rev_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText" />
+        </ScrollView>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,109 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fillViewport="true"
+    android:background="?android:attr/colorBackground"
+    android:padding="@dimen/spacing_md">
 
     <LinearLayout
-        android:id="@+id/llSend"
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnSelectImage"
-            android:layout_width="0dp"
+        <!-- 操作按钮卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/actionCard"
+            style="@style/Widget.LocalDrop.CardView.Elevated"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:text="发送图片"
-            tools:enabled="true"
-            tools:ignore="HardcodedText" />
+            android:layout_marginBottom="@dimen/spacing_md">
 
-        <Button
-            android:id="@+id/btnSelectFile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:text="发送文件"
-            tools:enabled="true"
-            tools:ignore="HardcodedText" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="@dimen/spacing_sm">
 
-        <Button
-            android:id="@+id/btnSendMessage"
-            android:layout_width="0dp"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectImage"
+                    style="@style/Widget.LocalDrop.Button.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/spacing_xs"
+                    android:text="发送图片"
+                    app:icon="@android:drawable/ic_menu_gallery"
+                    tools:ignore="HardcodedText" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectFile"
+                    style="@style/Widget.LocalDrop.Button.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/spacing_xs"
+                    android:text="发送文件"
+                    app:icon="@android:drawable/ic_menu_upload"
+                    tools:ignore="HardcodedText" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSendMessage"
+                    style="@style/Widget.LocalDrop.Button.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/spacing_xs"
+                    android:text="发送信息"
+                    app:icon="@android:drawable/ic_menu_send"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 连接控制区 -->
+        <LinearLayout
+            android:id="@+id/connectionSection"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:text="发送信息"
-            tools:enabled="true"
-            tools:ignore="HardcodedText" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_md">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnScanner"
+                style="@style/Widget.LocalDrop.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:text="扫描设备"
+                app:icon="@android:drawable/ic_menu_search"
+                tools:ignore="HardcodedText" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDisconnect"
+                style="@style/Widget.LocalDrop.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_sm"
+                android:text="断开连接"
+                app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <!-- 已选文件卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/filesCard"
+            style="@style/Widget.LocalDrop.CardView.Elevated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_md">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已选文件"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="@dimen/spacing_sm"
+                    tools:ignore="HardcodedText" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/horizontalListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:scrollbars="horizontal" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 可用设备卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/devicesCard"
+            style="@style/Widget.LocalDrop.CardView.Elevated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="可用设备"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="@dimen/spacing_sm"
+                    tools:ignore="HardcodedText" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvDeviceList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
-
-
-    <Button
-        android:id="@+id/btnScanner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/llSend"
-        android:layout_alignParentStart="true"
-        android:layout_margin="5dp"
-        android:text="扫描设备" />
-
-    <Button
-        android:id="@+id/btnDisconnect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/llSend"
-        android:layout_alignEnd="@id/btnScanner"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="5dp"
-        android:text="断开连接" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/horizontalListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btnScanner"
-        android:padding="8dp"
-        android:scrollbars="horizontal" />
-
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/tvFileList"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_below="@id/btnScanner"-->
-    <!--        android:text="当前待发送文件个数:     " />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/tvFilenum"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_below="@id/btnScanner"-->
-    <!--        android:layout_alignEnd="@id/tvFileList"-->
-    <!--        android:text="0" />-->
-
-    <TextView
-        android:id="@+id/tvDeviceList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/horizontalListView"
-        android:text="当前设备列表:"
-
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDeviceList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvDeviceList" />
-
-
-</RelativeLayout>
+</androidx.core.widget.NestedScrollView>

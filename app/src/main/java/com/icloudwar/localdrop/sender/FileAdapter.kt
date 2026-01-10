@@ -58,4 +58,11 @@ class FileAdapter(
     }
 
     override fun getItemCount() = files.size
+
+    // 更新数据列表
+    fun updateData(newFiles: MutableList<FileInfo>) {
+        files.clear()
+        files.addAll(newFiles)
+        notifyDataSetChanged()
+    }
 }

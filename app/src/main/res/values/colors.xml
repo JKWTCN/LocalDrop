@@ -1,6 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 基础颜色 -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="color_top_bar">#FF0277BD</color>
+
+    <!-- ========== Material Design 3 配色方案 - 日间模式 ========== -->
+
+    <!-- 主色调 Primary -->
+    <color name="md_theme_light_primary">#1976D2</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#E3F2FD</color>
+    <color name="md_theme_light_onPrimaryContainer">#0D47A1</color>
+
+    <!-- 辅助色 Secondary -->
+    <color name="md_theme_light_secondary">#03A9F4</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#E1F5FE</color>
+    <color name="md_theme_light_onSecondaryContainer">#001F29</color>
+
+    <!-- 第三色调 Tertiary -->
+    <color name="md_theme_light_tertiary">#00BCD4</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#B2EBF2</color>
+    <color name="md_theme_light_onTertiaryContainer">#001F24</color>
+
+    <!-- 背景色 -->
+    <color name="md_theme_light_background">#FDFBFF</color>
+    <color name="md_theme_light_onBackground">#1A1B1F</color>
+
+    <!-- 表面色 Surface -->
+    <color name="md_theme_light_surface">#FDFBFF</color>
+    <color name="md_theme_light_onSurface">#1A1B1F</color>
+    <color name="md_theme_light_surfaceVariant">#E1E2EC</color>
+    <color name="md_theme_light_onSurfaceVariant">#44474F</color>
+    <color name="md_theme_light_outline">#757780</color>
+
+    <!-- 错误色 Error -->
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+
+    <!-- 语义化颜色 -->
+    <color name="success">#4CAF50</color>
+    <color name="success_container">#E8F5E9</color>
+    <color name="warning">#FF9800</color>
+    <color name="warning_container">#FFF3E0</color>
+    <color name="info">#2196F3</color>
+    <color name="info_container">#E3F2FD</color>
+
+    <!-- ========== 状态颜色选择器 ========== -->
+    <color name="button_background_default">#1976D2</color>
+    <color name="button_background_pressed">#1565C0</color>
+    <color name="button_background_disabled">#BDBDBD</color>
+
+    <color name="button_text_default">#FFFFFF</color>
+    <color name="button_text_pressed">#FFFFFF</color>
+    <color name="button_text_disabled">#9E9E9E</color>
+
+    <color name="card_background_default">#FFFFFF</color>
+    <color name="card_background_elevated">#FAFAFA</color>
+
+    <color name="text_primary">#DE000000</color>
+    <color name="text_secondary">#99000000</color>
+    <color name="text_hint">#61000000</color>
+
+    <!-- ========== Dark Theme Colors (Fallbacks for Lint) ========== -->
+    <!-- These are also defined in values-night/colors.xml for proper dark theme support -->
+
+    <!-- Primary -->
+    <color name="md_theme_dark_primary">#1976D2</color>
+    <color name="md_theme_dark_onPrimary">#FFFFFF</color>
+    <color name="md_theme_dark_primaryContainer">#E3F2FD</color>
+    <color name="md_theme_dark_onPrimaryContainer">#0D47A1</color>
+
+    <!-- Secondary -->
+    <color name="md_theme_dark_secondary">#03A9F4</color>
+    <color name="md_theme_dark_onSecondary">#FFFFFF</color>
+    <color name="md_theme_dark_secondaryContainer">#E1F5FE</color>
+    <color name="md_theme_dark_onSecondaryContainer">#001F29</color>
+
+    <!-- Tertiary -->
+    <color name="md_theme_dark_tertiary">#00BCD4</color>
+    <color name="md_theme_dark_onTertiary">#FFFFFF</color>
+    <color name="md_theme_dark_tertiaryContainer">#B2EBF2</color>
+    <color name="md_theme_dark_onTertiaryContainer">#001F24</color>
+
+    <!-- Background -->
+    <color name="md_theme_dark_background">#FDFBFF</color>
+    <color name="md_theme_dark_onBackground">#1A1B1F</color>
+
+    <!-- Surface -->
+    <color name="md_theme_dark_surface">#FDFBFF</color>
+    <color name="md_theme_dark_onSurface">#1A1B1F</color>
+    <color name="md_theme_dark_surfaceVariant">#E1E2EC</color>
+    <color name="md_theme_dark_onSurfaceVariant">#44474F</color>
+    <color name="md_theme_dark_outline">#757780</color>
+
+    <!-- Error -->
+    <color name="md_theme_dark_error">#BA1A1A</color>
+    <color name="md_theme_dark_onError">#FFFFFF</color>
+    <color name="md_theme_dark_errorContainer">#FFDAD6</color>
+    <color name="md_theme_dark_onErrorContainer">#410002</color>
+
+    <!-- Semantic Colors -->
+    <color name="success_dark">#4CAF50</color>
+    <color name="success_container_dark">#E8F5E9</color>
+    <color name="warning_dark">#FF9800</color>
+    <color name="warning_container_dark">#FFF3E0</color>
+    <color name="info_dark">#2196F3</color>
+    <color name="info_container_dark">#E3F2FD</color>
+
+    <!-- Button Colors -->
+    <color name="button_background_default_dark">#1976D2</color>
+    <color name="button_background_pressed_dark">#1565C0</color>
+    <color name="button_background_disabled_dark">#BDBDBD</color>
+    <color name="button_text_default_dark">#FFFFFF</color>
+    <color name="button_text_pressed_dark">#FFFFFF</color>
+    <color name="button_text_disabled_dark">#9E9E9E</color>
+
+    <!-- Card Colors -->
+    <color name="card_background_default_dark">#FFFFFF</color>
+    <color name="card_background_elevated_dark">#FAFAFA</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary_dark">#DE000000</color>
+    <color name="text_secondary_dark">#99000000</color>
+    <color name="text_hint_dark">#61000000</color>
 </resources>

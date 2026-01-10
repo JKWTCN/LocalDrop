@@ -1,85 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    android:fillViewport="true"
+    android:background="?android:attr/colorBackground">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="16dp">
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_md">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- 网络设置卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="端口号:"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginBottom="@dimen/spacing_md"
+            style="@style/Widget.LocalDrop.CardView.Elevated">
 
-        <EditText
-            android:id="@+id/et_port"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:maxLength="5"/>
-        <!-- 保存按钮 -->
-        <Button
-            android:id="@+id/btn_save_port"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="保存"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
 
-            style="@style/Widget.AppCompat.Button.Colored"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="网络设置"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    tools:ignore="HardcodedText" />
+
+                <!-- 端口号设置 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPort"
+                    style="@style/Widget.LocalDrop.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="端口号"
+                    app:endIconDrawable="@android:drawable/ic_menu_save"
+                    app:endIconMode="custom"
+                    tools:ignore="HardcodedText">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_port"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="5" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_save_port"
+                    style="@style/Widget.LocalDrop.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="保存"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 存储设置卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_md"
+            style="@style/Widget.LocalDrop.CardView.Elevated">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="存储设置"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    tools:ignore="HardcodedText" />
+
+                <!-- 保存到 Pictures 开关 -->
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_save_to_pictures"
+                    style="@style/Widget.LocalDrop.Switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="图片保存到 Pictures 文件夹"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 操作卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_md"
+            style="@style/Widget.LocalDrop.CardView.Elevated">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="操作"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    tools:ignore="HardcodedText" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_resetToDefault"
+                    style="@style/Widget.LocalDrop.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="重置设置"
+                    app:icon="@android:drawable/ic_menu_revert"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 关于卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.LocalDrop.CardView.Elevated">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="关于"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    tools:ignore="HardcodedText" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_github"
+                        style="@style/Widget.LocalDrop.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/spacing_sm"
+                        android:text="GitHub"
+                        app:icon="@android:drawable/ic_menu_info_details"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_bilibili"
+                        style="@style/Widget.LocalDrop.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/spacing_sm"
+                        android:text="Bilibili"
+                        app:icon="@android:drawable/ic_menu_info_details"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+                <!-- 版本信息 -->
+                <TextView
+                    android:id="@+id/tvVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg"
+                    android:layout_gravity="center"
+                    android:text="LocalDrop v1.3"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="16dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="图片保存到Pictures"
-            android:layout_marginEnd="8dp"/>
-        <Switch
-            android:id="@+id/switch_save_to_pictures"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            />
-    </LinearLayout>
-    <Button
-        android:id="@+id/btn_resetToDefault"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="重置设置"
-        style="@style/Widget.AppCompat.Button.Colored"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="16dp">
-    <!-- GitHub 链接 -->
-    <Button
-        android:id="@+id/btn_github"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GitHub"
-        style="@style/Widget.AppCompat.Button.Colored"/>
-
-    <!-- B站 链接 -->
-    <Button
-        android:id="@+id/btn_bilibili"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bilibili"
-        style="@style/Widget.AppCompat.Button.Colored"/>
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

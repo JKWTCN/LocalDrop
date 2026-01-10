@@ -48,16 +48,17 @@ class ReceiverFragment : Fragment() {
     }
 
     // view相关
+    private var rootView: View? = null
 
     private val btnHistory by lazy {
-        activity?.findViewById<Button>(R.id.btnHistory)
+        rootView?.findViewById<Button>(R.id.btnHistory)
     }
 
     private val btnClearText by lazy {
-        activity?.findViewById<Button>(R.id.btnClearText)
+        rootView?.findViewById<Button>(R.id.btnClearText)
     }
     private val textRev by lazy {
-        activity?.findViewById<TextView>(R.id.rev_text)
+        rootView?.findViewById<TextView>(R.id.rev_text)
     }
 
     private var progressDialog: AlertDialog? = null
@@ -253,7 +254,8 @@ class ReceiverFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.activity_receiver, container, false)
+        rootView = inflater.inflate(R.layout.activity_receiver, container, false)
+        return rootView
     }
 
     //  ActionListener

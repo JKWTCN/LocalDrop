@@ -1,8 +1,11 @@
 package com.icloudwar.localdrop.receiver// com.icloudwar.localdrop.receiver.FileReceiver.kt
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
+import android.media.MediaScannerConnection
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
@@ -51,12 +54,6 @@ class FileReceiver(public var port: Int) {
         bigStartT.interrupt()
     }
 
-    fun getNowTimeString() {
-        val currentTimeMillis: Long = System.currentTimeMillis()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        dateFormat.format(Date(currentTimeMillis))
-    }
-
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun start(context: Context, historyManager: FileHistoryManager) {
@@ -64,6 +61,63 @@ class FileReceiver(public var port: Int) {
         bigStartT = Thread { fileHandleClient(context) }
         bigStartT.start()
     }
+
+    private fun refreshMediaStore(context: Context, file: File, fileType: FileType) {
+        when {
+            // 对于 Android 10+ 设备
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                val resolver = context.contentResolver
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, file.name)
+                    put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(file))
+                    put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis() / 1000)
+                    put(MediaStore.MediaColumns.DATE_MODIFIED, System.currentTimeMillis() / 1000)
+                    put(MediaStore.MediaColumns.IS_PENDING, 0) // 标记为已完成
+                }
+
+                val collection = when (fileType) {
+                    FileType.IMG -> MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                    FileType.VIDEO -> MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                    FileType.AUDIO -> MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                    else -> MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                }
+
+                try {
+                    resolver.insert(collection, contentValues)?.let { uri ->
+                        // 对于 Android 10+，我们不需要也不能直接设置 _data 字段
+                        showLog("MediaStore updated with uri: $uri")
+                    }
+                } catch (e: Exception) {
+                    showLog("Failed to update MediaStore: ${e.message}")
+                }
+            }
+
+            // 对于 Android 9 及以下设备
+            else -> {
+                MediaScannerConnection.scanFile(
+                    context,
+                    arrayOf(file.absolutePath),
+                    arrayOf(getMimeType(file))
+                ) { path, uri ->
+                    showLog("Scanned $path -> uri=$uri")
+                }
+            }
+        }
+    }
+
+    private fun getMimeType(file: File): String {
+        return when (file.extension.toLowerCase()) {
+            "jpg", "jpeg" -> "image/jpeg"
+            "png" -> "image/png"
+            "gif" -> "image/gif"
+            "mp4" -> "video/mp4"
+            "mp3" -> "audio/mpeg"
+            "pdf" -> "application/pdf"
+            else -> "application/octet-stream"
+        }
+    }
+
+
 
     private fun fileHandleClient(context: Context) {
         ServerSocket(port).use { serverSocket ->
@@ -153,6 +207,9 @@ class FileReceiver(public var port: Int) {
                                 // 添加历史记录
                                 historyManager?.addHistory(fileInfo, targetFile.absolutePath)
                                 showLog("${fileInfo.fileName} saved")
+                                // 刷新 MediaStore
+                                refreshMediaStore(context, targetFile, fileInfo.fileType)
+
                             }
                         } else {
                             historyManager?.addHistory(fileInfo, null)

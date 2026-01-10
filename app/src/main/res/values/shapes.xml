@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ========== 形状外观 - 圆角样式 ========== -->
+
+    <!-- 小组件圆角 (8dp) -->
+    <style name="ShapeAppearance.LocalDrop.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_radius_sm</item>
+    </style>
+
+    <!-- 中组件圆角 (12dp) -->
+    <style name="ShapeAppearance.LocalDrop.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_radius_md</item>
+    </style>
+
+    <!-- 大组件圆角 (16dp) -->
+    <style name="ShapeAppearance.LocalDrop.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_radius_lg</item>
+    </style>
+
+    <!-- ========== 形状覆盖样式 ========== -->
+
+    <!-- 圆形 -->
+    <style name="ShapeAppearanceOverlay.LocalDrop.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- 圆角 -->
+    <style name="ShapeAppearanceOverlay.LocalDrop.RoundedCorner" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_radius_md</item>
+    </style>
+
+    <!-- 切角 -->
+    <style name="ShapeAppearanceOverlay.LocalDrop.CutCorner" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">@dimen/corner_radius_md</item>
+    </style>
+</resources>

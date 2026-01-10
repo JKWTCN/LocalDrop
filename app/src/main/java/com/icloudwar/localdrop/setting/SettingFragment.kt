@@ -12,7 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Switch
+import com.google.android.material.materialswitch.MaterialSwitch
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.Fragment
@@ -42,7 +42,7 @@ class SettingFragment : Fragment() {
     }
 
     private  val switch_save_to_pictures by lazy{
-        activity?.findViewById<Switch>(R.id.switch_save_to_pictures)
+        activity?.findViewById<MaterialSwitch>(R.id.switch_save_to_pictures)
     }
 
     private lateinit var mySettings: MySettings

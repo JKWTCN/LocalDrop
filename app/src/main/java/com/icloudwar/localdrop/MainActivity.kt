@@ -75,9 +75,6 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         findViewById<BottomNavigationView>(R.id.bottom_nav).setupWithNavController(navController)
 
-        val intent = intent
-        val action = intent.action // action
-        val type = intent.type // 类型
         when (intent.action) {
             Intent.ACTION_SEND_MULTIPLE -> {
                 intent.type ?: return
@@ -89,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
             Intent.ACTION_SEND -> {
                 // 可选：处理单文件分享
-                val type = intent.type ?: return
+                val mimeType = intent.type ?: return
                 val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
                 uri?.let {
                     navigateToSendFragmentWithData(arrayListOf(it))
